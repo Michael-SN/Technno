@@ -3,6 +3,8 @@ const app = new Vue({
   data: {
     products: [],
     itemProduct: false,
+    cartTotal: 0,
+    cart: [],
   },
   filters: {
     formatPrice(value) {
@@ -50,6 +52,9 @@ const app = new Vue({
         top: 0,
         behavior: "smooth",
       });
+    },
+    addItemInCart() {
+      //
     },
   },
   beforeCreate() {

@@ -29,7 +29,31 @@ body {
   padding: 0 80px;
 }
 
-#app .products {
+.header {
+  display: flex;
+  max-width: 900px;
+  justify-content: space-between;
+  padding: 1.25rem 0;
+  margin: 0 auto;
+}
+
+.header .logo {
+  width: 80px;
+}
+.cart-menu {
+  display: flex;
+  align-items: center;
+}
+.cart-menu::after {
+  content: "";
+  display: block;
+  background: url("./assets/carrinho.svg") no-repeat center center;
+  width: 25px;
+  height: 25px;
+  margin-left: 0.625rem;
+}
+
+.products {
   max-width: 900px;
   margin: 100px auto 0 auto;
 }
