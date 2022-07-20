@@ -3,7 +3,6 @@ const app = new Vue({
   data: {
     products: [],
     itemProduct: false,
-    cartTotal: 0,
     cart: [],
   },
   filters: {
@@ -17,6 +16,13 @@ const app = new Vue({
       if (!value) return "";
       value = value.toString();
       return value.charAt(0).toUpperCase() + value.slice(1);
+    },
+  },
+  computed: {
+    cartTotal() {
+      let total = 0;
+      total = this.cart.reduce((sum, item) => (sum += item.price), 0);
+      return total;
     },
   },
   methods: {
@@ -37,6 +43,7 @@ const app = new Vue({
       fetch(`./api/produtos/${id}/dados.json`)
         .then((response) => response.json())
         .then((rjson) => {
+          console.table(rjson);
           this.itemProduct = rjson;
         })
         .catch(function (error) {
@@ -54,7 +61,12 @@ const app = new Vue({
       });
     },
     addItemInCart() {
-      //
+      this.itemProduct.inventory--;
+      const { id, name, price } = this.itemProduct;
+      this.cart.push({ id, name, price });
+    },
+    removeItemOnCart() {
+      this.cart.splice(0, 1);
     },
   },
   beforeCreate() {

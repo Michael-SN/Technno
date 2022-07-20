@@ -172,7 +172,7 @@ body {
 .modal-item-button {
   margin-top: 3rem;
 }
-.modal-item-button > button {
+.modal-item-button > .add-item {
   background-color: #1a1a1a;
   border: none;
   color: #ffffff;
@@ -181,7 +181,12 @@ body {
   font-family: var(--font-family);
   padding: 0.625rem 1.5625rem;
 }
-.modal-item-button > button:active {
+.modal-item-button > .add-item:active {
+  background-color: #808080;
+}
+
+.modal-item-button > .add-item:disabled {
+  cursor: not-allowed;
   background-color: #808080;
 }
 
