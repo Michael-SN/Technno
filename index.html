@@ -19,9 +19,9 @@
   <div id="app">
     <header class="header">
       <img src="./assets/techno.svg" alt="Techno" class="logo">
-      <div class="cart-menu">{{ cartTotal | formatPrice }} | {{ cart.length }}</div>
+      <div class="cart-menu" @click="showCart = true">{{ cartTotal | formatPrice }} | {{ cart.length }}</div>
     </header>
-    <!-- <button @click="removeItemOnCart">Remover</button> -->
+
     <section class="products">
       <div class="product" v-for="product in products" :key="product.id" @click="openModal(product.id)">
         <div class="product-img">
@@ -33,7 +33,7 @@
         </div>
       </div>
     </section>
-    <!-- modal -->
+
     <div class="modal" v-if="itemProduct">
       <span class="overlay-modal" @click="itemProduct = !itemProduct"></span>
       <div class="modal-content">
@@ -65,6 +65,30 @@
           </ul>
         </div>
       </div>
+    </div>
+
+    <div class="modal-cart" :class="{active: showCart}">
+      <span class="overlay-modal" @click="showCart = false"></span>
+      <div class="cart-content">
+        <button class="modal-close" @click="showCart = false">X</button>
+        <h2 class="cart-title">Carrinho</h2>
+        <div v-if="(cart.length > 0)">
+          <ul>
+            <li v-for="(item, index) in cart" class="cart-item">
+              <p>{{item.name}}</p>
+              <p class="cart-item-price">{{ item.price | formatPrice }}</p>
+              <button class="remove-item-cart" @click="removeItemOnCart(index)">X</button>
+            </li>
+          </ul>
+          <p class="cart-total">Total: {{ cartTotal | formatPrice }}</p>
+          <button class="finish-cart">Finalizar Compra</button>
+        </div>
+        <p v-else>O carrinho está vazio</p>
+      </div>
+    </div>
+
+    <div class="alert" :class="{ active: activeAlertCart }">
+      <p class="alert-feedback"><span>{{ messageAlert }}</span> foi adicionado ao carrinho.</p>
     </div>
   </div>
 

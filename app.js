@@ -4,6 +4,9 @@ const app = new Vue({
     products: [],
     itemProduct: false,
     cart: [],
+    showCart: false,
+    messageAlert: "",
+    activeAlertCart: false,
   },
   filters: {
     formatPrice(value) {
@@ -16,6 +19,21 @@ const app = new Vue({
       if (!value) return "";
       value = value.toString();
       return value.charAt(0).toUpperCase() + value.slice(1);
+    },
+  },
+  watch: {
+    cart() {
+      window.localStorage.cart = JSON.stringify(this.cart);
+    },
+    itemProduct() {
+      document.title =
+        `Techno Project - ${this.itemProduct.name}` || "Techno Project";
+      const hash = this.itemProduct.id || " ";
+      history.pushState(null, null, `#${hash}`);
+
+      if (this.itemProduct) {
+        this.inventoryCheck();
+      }
     },
   },
   computed: {
@@ -43,7 +61,6 @@ const app = new Vue({
       fetch(`./api/produtos/${id}/dados.json`)
         .then((response) => response.json())
         .then((rjson) => {
-          console.table(rjson);
           this.itemProduct = rjson;
         })
         .catch(function (error) {
@@ -64,9 +81,33 @@ const app = new Vue({
       this.itemProduct.inventory--;
       const { id, name, price } = this.itemProduct;
       this.cart.push({ id, name, price });
+      this.alert(`${name}`);
     },
     removeItemOnCart() {
       this.cart.splice(0, 1);
+    },
+    checkStorage() {
+      if (window.localStorage.cart) {
+        this.cart = JSON.parse(window.localStorage.cart);
+      }
+    },
+    inventoryCheck() {
+      const items = this.cart.filter(({ id }) => id === this.itemProduct.id);
+      this.itemProduct.inventory -= items.length;
+    },
+    alert(message) {
+      this.messageAlert = message;
+      this.activeAlertCart = true;
+
+      setTimeout(() => {
+        this.activeAlertCart = false;
+      }, 1500);
+    },
+    router() {
+      const hash = document.location.hash;
+      if (hash) {
+        this.fetchItemProduct(hash.replace("#", ""));
+      }
     },
   },
   beforeCreate() {
@@ -74,5 +115,7 @@ const app = new Vue({
   },
   created() {
     this.fetchProducts();
+    this.router();
+    this.checkStorage();
   },
 });
